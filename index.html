@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTK Forward: 10-Year ESG Impact Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            color: #212529;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #001f5c 0%, #0033A0 50%, #0055CC 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 40px rgba(0, 51, 160, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .scenario-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 18px 40px;
+            font-size: 1.05em;
+            font-weight: 600;
+            border: 2px solid #0033A0;
+            background-color: white;
+            color: #0033A0;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .scenario-btn:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 51, 160, 0.2);
+        }
+
+        .scenario-btn.active {
+            background: linear-gradient(135deg, #0033A0 0%, #0055CC 100%);
+            color: white;
+            border-color: #0033A0;
+            box-shadow: 0 8px 24px rgba(0, 51, 160, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .pillar-section {
+            margin-bottom: 60px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .pillar-title {
+            font-size: 2em;
+            color: #0033A0;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #0033A0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 28px rgba(0, 51, 160, 0.12);
+            border-color: #0033A0;
+        }
+
+        .kpi-label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #0033A0;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .kpi-value.positive {
+            color: #198754;
+        }
+
+        .kpi-value.negative {
+            color: #dc3545;
+        }
+
+        .chart-section {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 40px;
+        }
+
+        .chart-title {
+            font-size: 1.8em;
+            color: #0033A0;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        #impactChart {
+            max-height: 450px;
+        }
+
+        .non-financial-section {
+            background: linear-gradient(135deg, #0033A0 0%, #0055CC 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 51, 160, 0.25);
+            margin-bottom: 40px;
+        }
+
+        .non-financial-title {
+            font-size: 2em;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .non-financial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .non-financial-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .non-financial-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .non-financial-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .non-financial-card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .non-financial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .kpi-grid,
+            .kpi-grid.env-financial {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-btn {
+                min-width: 160px;
+                padding: 14px 28px;
+            }
+
+            .pillar-section,
+            .chart-section,
+            .non-financial-section {
+                padding: 25px;
+            }
+
+            .non-financial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MTK Forward: 10-Year ESG Impact Dashboard</h1>
+            <p class="subtitle">Comprehensive Environmental, Social & Governance Strategy Visualization</p>
+        </header>
+
+        <div class="scenario-selector">
+            <button class="scenario-btn" data-scenario="Business as Usual">Business as Usual</button>
+            <button class="scenario-btn active" data-scenario="MTK Forward Plan">MTK Forward Plan</button>
+            <button class="scenario-btn" data-scenario="Ambitious Plan">Ambitious Plan</button>
+        </div>
+
+        <div class="pillar-section">
+            <h2 class="pillar-title">Environmental & Financial</h2>
+            <div class="kpi-grid env-financial">
+                <div class="kpi-card">
+                    <div class="kpi-label">Cumulative Net Impact</div>
+                    <div class="kpi-value" id="cumulativeNetImpact">€0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Investment</div>
+                    <div class="kpi-value" id="totalInvestment">€0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">CO₂ Emissions Avoided</div>
+                    <div class="kpi-value" id="co2Avoided">0 tonnes</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Brand Value Increase</div>
+                    <div class="kpi-value" id="brandValueIncrease">€0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Waste Diversion Rate</div>
+                    <div class="kpi-value" id="wasteDiversionTarget">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Renewable Energy Usage</div>
+                    <div class="kpi-value" id="renewableEnergyTarget">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pillar-section">
+            <h2 class="pillar-title">Social</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Women in Leadership</div>
+                    <div class="kpi-value" id="womenInLeadership">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Fan Belonging Score</div>
+                    <div class="kpi-value" id="fanBelongingScore">0 / 10</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Annual Community Investment</div>
+                    <div class="kpi-value" id="communityInvestment">€0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pillar-section">
+            <h2 class="pillar-title">Governance</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">ESG Partner Screening</div>
+                    <div class="kpi-value" id="partnerScreening">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Board ESG Oversight</div>
+                    <div class="kpi-value" id="boardOversight">Status</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Reporting Standard</div>
+                    <div class="kpi-value" id="reportingStandard">Standard</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h3 class="chart-title">Cumulative Net Impact Over 10 Years</h3>
+            <canvas id="impactChart"></canvas>
+        </div>
+
+        <div class="non-financial-section">
+            <h2 class="non-financial-title">Non-Financial Returns</h2>
+            <div class="non-financial-grid">
+                <div class="non-financial-card">
+                    <h3>Risk Mitigation</h3>
+                    <p>Energy efficiency and renewable investments reduce exposure to volatile energy prices and prepare the club for potential carbon taxes.</p>
+                </div>
+                <div class="non-financial-card">
+                    <h3>Regulatory Readiness</h3>
+                    <p>GRI-aligned reporting and third-party assurance ensure compliance with upcoming EU CSRD requirements, avoiding costly last-minute adjustments.</p>
+                </div>
+                <div class="non-financial-card">
+                    <h3>Stakeholder Trust</h3>
+                    <p>Authentic ESG action builds resilient trust with fans, sponsors, and community, strengthening the club's social license to operate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dashboardData = {
+            "Business as Usual": {
+                cumulativeNetImpact: -500000,
+                totalInvestment: 0,
+                co2Avoided: 0,
+                brandValueIncrease: 0,
+                wasteDiversionTarget: "30%",
+                renewableEnergyTarget: "5%",
+                chartData: [0, -50000, -100000, -150000, -200000, -250000, -300000, -350000, -400000, -500000],
+                womenInLeadership: "15%",
+                fanBelongingScore: "6.5 / 10",
+                communityInvestment: 20000,
+                partnerScreening: "0%",
+                boardOversight: "Not in Place",
+                reportingStandard: "Basic Financials"
+            },
+            "MTK Forward Plan": {
+                cumulativeNetImpact: 9378600,
+                totalInvestment: 2396500,
+                co2Avoided: 3000,
+                brandValueIncrease: 10000000,
+                wasteDiversionTarget: "90%",
+                renewableEnergyTarget: "40%",
+                chartData: [-468000, 314000, 1246000, 2274000, 3401000, 4633000, 5976000, 7218000, 8365000, 9378600],
+                womenInLeadership: "Target: 40%",
+                fanBelongingScore: "Target: 8.5 / 10",
+                communityInvestment: 150000,
+                partnerScreening: "100%",
+                boardOversight: "Committee Active",
+                reportingStandard: "GRI + Limited Assurance"
+            },
+            "Ambitious Plan": {
+                cumulativeNetImpact: 11600000,
+                totalInvestment: 3500000,
+                co2Avoided: 5000,
+                brandValueIncrease: 14400000,
+                wasteDiversionTarget: "95%",
+                renewableEnergyTarget: "60%",
+                chartData: [-800000, 400000, 1600000, 2880000, 4240000, 5680000, 7200000, 8720000, 10160000, 11600000],
+                womenInLeadership: "Target: 50%",
+                fanBelongingScore: "Target: 9.0 / 10",
+                communityInvestment: 300000,
+                partnerScreening: "100%",
+                boardOversight: "Fully Integrated",
+                reportingStandard: "GRI + Reasonable Assurance"
+            }
+        };
+
+        function formatCurrency(value) {
+            return '€' + value.toLocaleString('en-US');
+        }
+
+        function formatNumber(value) {
+            return value.toLocaleString('en-US');
+        }
+
+        let chart;
+
+        function initChart() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6', 'Year 7', 'Year 8', 'Year 9', 'Year 10'],
+                    datasets: [{
+                        label: 'Cumulative Net Impact (€)',
+                        data: [],
+                        borderColor: '#0033A0',
+                        backgroundColor: 'rgba(0, 51, 160, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#0033A0',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                },
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Impact: €' + context.parsed.y.toLocaleString('en-US');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                callback: function(value) {
+                                    return '€' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDashboard(scenario) {
+            const data = dashboardData[scenario];
+
+            // Update Environmental & Financial KPIs
+            const netImpactEl = document.getElementById('cumulativeNetImpact');
+            netImpactEl.textContent = formatCurrency(data.cumulativeNetImpact);
+            netImpactEl.className = 'kpi-value ' + (data.cumulativeNetImpact >= 0 ? 'positive' : 'negative');
+
+            document.getElementById('totalInvestment').textContent = formatCurrency(data.totalInvestment);
+            document.getElementById('co2Avoided').textContent = formatNumber(data.co2Avoided) + ' tonnes';
+            document.getElementById('brandValueIncrease').textContent = formatCurrency(data.brandValueIncrease);
+            document.getElementById('wasteDiversionTarget').textContent = data.wasteDiversionTarget;
+            document.getElementById('renewableEnergyTarget').textContent = data.renewableEnergyTarget;
+
+            // Update Social KPIs
+            document.getElementById('womenInLeadership').textContent = data.womenInLeadership;
+            document.getElementById('fanBelongingScore').textContent = data.fanBelongingScore;
+            document.getElementById('communityInvestment').textContent = formatCurrency(data.communityInvestment);
+
+            // Update Governance KPIs
+            document.getElementById('partnerScreening').textContent = data.partnerScreening;
+            document.getElementById('boardOversight').textContent = data.boardOversight;
+            document.getElementById('reportingStandard').textContent = data.reportingStandard;
+
+            // Update chart
+            chart.data.datasets[0].data = data.chartData;
+            chart.update();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            updateDashboard('MTK Forward Plan');
+
+            // Scenario button handlers
+            const buttons = document.querySelectorAll('.scenario-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    updateDashboard(this.dataset.scenario);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
