@@ -27,13 +27,13 @@
         }
 
         header {
-            background: linear-gradient(135deg, #001f5c 0%, #0033A0 50%, #0055CC 100%);
+            background: linear-gradient(135deg, #001a4d 0%, #002b7a 50%, #003d99 100%);
             color: white;
-            padding: 50px 40px;
+            padding: 40px 40px;
             text-align: center;
-            border-radius: 16px;
+            border-radius: 0px;
             margin-bottom: 50px;
-            box-shadow: 0 10px 40px rgba(0, 51, 160, 0.25);
+            box-shadow: 0 10px 40px rgba(0, 43, 122, 0.25);
             position: relative;
             overflow: hidden;
         }
@@ -50,7 +50,7 @@
         }
 
         h1 {
-            font-size: 3em;
+            font-size: 2.2em;
             font-weight: 700;
             margin-bottom: 15px;
             letter-spacing: -1px;
@@ -76,11 +76,11 @@
             padding: 18px 40px;
             font-size: 1.05em;
             font-weight: 600;
-            border: 2px solid #0033A0;
+            border: 2px solid #002b7a;
             background-color: white;
-            color: #0033A0;
+            color: #002b7a;
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 0px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 200px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -89,14 +89,14 @@
         .scenario-btn:hover {
             background-color: #f8f9fa;
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 51, 160, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 43, 122, 0.2);
         }
 
         .scenario-btn.active {
-            background: linear-gradient(135deg, #0033A0 0%, #0055CC 100%);
+            background: linear-gradient(135deg, #002b7a 0%, #003d99 100%);
             color: white;
-            border-color: #0033A0;
-            box-shadow: 0 8px 24px rgba(0, 51, 160, 0.35);
+            border-color: #002b7a;
+            box-shadow: 0 8px 24px rgba(0, 43, 122, 0.35);
             transform: translateY(-2px);
         }
 
@@ -104,16 +104,16 @@
             margin-bottom: 60px;
             background: white;
             padding: 40px;
-            border-radius: 16px;
+            border-radius: 0px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
 
         .pillar-title {
             font-size: 2em;
-            color: #0033A0;
+            color: #002b7a;
             margin-bottom: 30px;
             padding-bottom: 15px;
-            border-bottom: 4px solid #0033A0;
+            border-bottom: 4px solid #002b7a;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
@@ -127,7 +127,7 @@
         .kpi-card {
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 0px;
             border: 1px solid #e9ecef;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -135,8 +135,8 @@
 
         .kpi-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 8px 28px rgba(0, 51, 160, 0.12);
-            border-color: #0033A0;
+            box-shadow: 0 8px 28px rgba(0, 43, 122, 0.12);
+            border-color: #002b7a;
         }
 
         .kpi-label {
@@ -151,7 +151,7 @@
         .kpi-value {
             font-size: 2.2em;
             font-weight: 700;
-            color: #0033A0;
+            color: #002b7a;
             word-wrap: break-word;
             line-height: 1.2;
         }
@@ -167,14 +167,14 @@
         .chart-section {
             background: white;
             padding: 40px;
-            border-radius: 16px;
+            border-radius: 0px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             margin-bottom: 40px;
         }
 
         .chart-title {
             font-size: 1.8em;
-            color: #0033A0;
+            color: #002b7a;
             margin-bottom: 30px;
             text-align: center;
             font-weight: 700;
@@ -185,11 +185,11 @@
         }
 
         .non-financial-section {
-            background: linear-gradient(135deg, #0033A0 0%, #0055CC 100%);
+            background: linear-gradient(135deg, #002b7a 0%, #003d99 100%);
             color: white;
             padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 51, 160, 0.25);
+            border-radius: 0px;
+            box-shadow: 0 4px 20px rgba(0, 43, 122, 0.25);
             margin-bottom: 40px;
         }
 
@@ -210,7 +210,7 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 0px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
@@ -272,7 +272,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>MTK Forward: 10-Year ESG Impact Dashboard</h1>
+            <h1>MTK FC Forward: 10-Year ESG Impact Dashboard</h1>
             <p class="subtitle">Comprehensive Environmental, Social & Governance Strategy Visualization</p>
         </header>
 
@@ -440,13 +440,13 @@
                     datasets: [{
                         label: 'Cumulative Net Impact (€)',
                         data: [],
-                        borderColor: '#0033A0',
-                        backgroundColor: 'rgba(0, 51, 160, 0.1)',
+                        borderColor: '#002b7a',
+                        backgroundColor: 'rgba(0, 43, 122, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
                         pointRadius: 6,
-                        pointBackgroundColor: '#0033A0',
+                        pointBackgroundColor: '#002b7a',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
                         pointHoverRadius: 8
