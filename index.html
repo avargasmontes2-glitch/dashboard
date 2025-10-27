@@ -195,16 +195,29 @@
             margin-bottom: 40px;
         }
 
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 0px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
         .chart-title {
-            font-size: 1.8em;
+            font-size: 1.4em;
             color: #002b7a;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
             font-weight: 700;
         }
 
-        #returnsChart {
-            max-height: 450px;
+        #returnsChart, #impactChart {
+            max-height: 350px;
         }
 
         @media (max-width: 1200px) {
@@ -223,6 +236,10 @@
             }
 
             .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-row {
                 grid-template-columns: 1fr;
             }
 
@@ -271,9 +288,15 @@
             </div>
         </div>
 
-        <div class="chart-section">
-            <h3 class="chart-title">Financial Returns by Strategic Area</h3>
-            <canvas id="returnsChart"></canvas>
+        <div class="charts-row">
+            <div class="chart-container">
+                <h3 class="chart-title">Financial Returns by Strategic Area</h3>
+                <canvas id="returnsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Cumulative Net Impact Over 10 Years</h3>
+                <canvas id="impactChart"></canvas>
+            </div>
         </div>
 
         <div class="pillar-section">
@@ -398,7 +421,7 @@
             }
         };
 
-        let chart;
+        let returnsChart, impactChart;
 
         function formatCurrency(value) {
             return '€' + value.toLocaleString('en-US');
@@ -408,9 +431,10 @@
             return value.toLocaleString('en-US');
         }
 
-        function initChart() {
-            const ctx = document.getElementById('returnsChart').getContext('2d');
-            chart = new Chart(ctx, {
+        function initCharts() {
+            // Returns Chart
+            const ctx1 = document.getElementById('returnsChart').getContext('2d');
+            returnsChart = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: ['Climate & Energy', 'Circular Economy', 'Diversity, Equity & Inclusion', 'Ethical Partnerships'],
@@ -486,6 +510,82 @@
                     }
                 }
             });
+
+            // Impact Chart
+            const ctx2 = document.getElementById('impactChart').getContext('2d');
+            impactChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Start', 'Years 1-3', 'Years 4-6', 'Years 7-10'],
+                    datasets: [{
+                        label: 'Cumulative Net Impact (€)',
+                        data: [],
+                        borderColor: '#002b7a',
+                        backgroundColor: 'rgba(0, 43, 122, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#002b7a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Impact: €' + context.parsed.y.toLocaleString('en-US');
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                callback: function(value) {
+                                    return '€' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function updateDashboard(period) {
@@ -525,14 +625,19 @@
             if (transportEl) transportEl.textContent = data.transport;
             if (fanEngagementEl) fanEngagementEl.textContent = data.fanEngagement;
 
-            // Update chart
-            chart.data.datasets[0].data = [data.climate, data.circular, data.diversity, data.ethical];
-            chart.update();
+            // Update charts
+            returnsChart.data.datasets[0].data = [data.climate, data.circular, data.diversity, data.ethical];
+            returnsChart.update();
+
+            // Update impact chart with cumulative data
+            const cumulativeData = [0, 1130700, 3315700, 6360100];
+            impactChart.data.datasets[0].data = cumulativeData;
+            impactChart.update();
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            initChart();
+            initCharts();
             updateDashboard(1);
 
             // Slider handler
